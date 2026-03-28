@@ -216,6 +216,151 @@ textarea{resize:vertical;line-height:1.6;min-height:68px}
 
 /* ── トースト ── */
 .toast{position:fixed;bottom:28px;right:16px;background:var(--text);color:var(--bg);font-size:13px;font-weight:700;padding:12px 20px;border-radius:var(--r);z-index:9999;font-family:var(--font);box-shadow:0 4px 20px rgba(0,0,0,.2);max-width:80vw}
+
+/* ══ スマホ完全対応 (max-width:680px) ══ */
+@media(max-width:680px){
+  /* ヘッダー */
+  .lp-header{padding:12px 12px 10px}
+  .lp-title{font-size:16px}
+  .lp-sub{font-size:11px}
+  .lp-badges{gap:4px}
+  .badge{font-size:10px;padding:2px 8px}
+
+  /* ナビタブ：スクロール固定 */
+  .nav-inner{padding:0 8px}
+  .tab{padding:7px 10px;font-size:12px}
+
+  /* メイン余白 */
+  #root{padding:10px 10px 80px}
+
+  /* 保存バー */
+  .save-bar{font-size:11px;margin-bottom:8px}
+
+  /* 月ナビ */
+  .month-nav{padding:8px 10px;gap:6px}
+  .mn-label{font-size:14px;min-width:84px}
+  .mn-btn{padding:5px 10px;font-size:12px}
+
+  /* カード */
+  .card{padding:12px 12px;margin-bottom:10px}
+  .ch{font-size:13px;margin-bottom:8px}
+
+  /* グリッド：全部1列 */
+  .g2,.g3,.g4,.g5{grid-template-columns:1fr;gap:8px}
+  .pdca-grid{grid-template-columns:1fr!important;gap:8px}
+
+  /* ヒーローKPI：2列 */
+  .hero-kpi-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .hero-kpi{padding:12px 10px 10px}
+  .hk-label{font-size:10px;margin-bottom:4px}
+  .hk-val{font-size:28px}
+  .hk-sub{font-size:11px}
+
+  /* KPIカード */
+  .kpi{padding:10px 10px}
+  .kl{font-size:10px}
+  .kv{font-size:20px}
+
+  /* フォーム：大きく見やすく */
+  input,select,textarea{
+    font-size:16px!important;
+    padding:13px 12px!important;
+    border-radius:8px;
+    line-height:1.5;
+  }
+  textarea{min-height:88px!important;line-height:1.6!important}
+  .fl{font-size:13px;margin-top:12px;margin-bottom:5px}
+
+  /* +/-ボタン：大きく */
+  .nc-btn{width:40px;height:40px;font-size:20px}
+  .nc-input{font-size:24px!important;padding:8px!important}
+  .nc-wrap{gap:8px;margin-top:6px}
+
+  /* ボタン：タップしやすく */
+  .btn{padding:12px 20px;font-size:14px;min-height:44px}
+  .btn-sm{padding:8px 14px;font-size:12px;min-height:36px}
+  .btn-warn{padding:10px 14px;font-size:13px;min-height:40px}
+  .btn-green{padding:10px 14px;font-size:13px;min-height:40px}
+  .copy-btn{padding:10px 18px;font-size:13px;width:100%;margin-top:10px}
+
+  /* 気分ボタン */
+  .mb{padding:10px 2px;font-size:24px}
+
+  /* セグメントボタン */
+  .seg-btn{padding:10px;font-size:13px;min-height:44px}
+
+  /* PDCAボックス */
+  .pdca-box{padding:10px 10px}
+  .pdca-tag{font-size:11px;margin-bottom:6px}
+
+  /* 思考ログ */
+  .thought{padding:6px 12px;margin-bottom:10px}
+  .tl{font-size:11px}
+  .tb{font-size:13px;line-height:1.6}
+
+  /* 日報リスト */
+  .ri{padding:12px 12px;margin-bottom:8px}
+
+  /* ファネル */
+  .funnel-label{width:72px;font-size:11px}
+  .funnel-val{font-size:14px;width:30px}
+
+  /* 月比較 */
+  .compare-row{flex-wrap:wrap;gap:4px;padding:8px 4px}
+  .compare-row>span:first-child{width:100%;font-size:13px}
+
+  /* ガイド */
+  .guide-hero{padding:16px 14px}
+  .guide-hero h2{font-size:17px}
+  .guide-hero p{font-size:12px}
+  .step-card{padding:11px;gap:10px}
+  .step-num{width:26px;height:26px;font-size:13px;flex-shrink:0}
+  .step-title{font-size:13px}
+  .step-desc{font-size:12px}
+  .step-tip{font-size:11px}
+  .uc-grid{grid-template-columns:1fr!important}
+  .uc{padding:12px}
+  .faq-q{font-size:13px}
+  .faq-a{font-size:12px}
+
+  /* 個人目標 */
+  .pg-item{padding:12px 0;gap:10px}
+  .pg-chk{width:22px;height:22px}
+  .pgtitle{font-size:14px}
+  .pgcat{font-size:11px;padding:3px 8px}
+  .pgdel{font-size:16px;padding:4px 6px}
+
+  /* データ管理 */
+  .data-box{padding:14px}
+  .data-box h3{font-size:14px}
+  .stat-num{font-size:26px}
+
+  /* シェアカード */
+  .share-card{padding:14px}
+  .share-text{font-size:13px;line-height:1.9;padding:12px}
+
+  /* 入力ページのボタン行 */
+  .report-btn-row{flex-direction:column;gap:8px}
+  .report-btn-row .btn{width:100%;text-align:center}
+
+  /* ヒストリー詳細：縦並び */
+  #dtl .card{padding:12px}
+
+  /* g5を3列に */
+  .g5{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+
+  /* フッター */
+  .footer{font-size:11px;padding:16px 0 6px;line-height:1.8}
+}
+
+/* さらに小さい画面（375px以下） */
+@media(max-width:375px){
+  .hero-kpi-grid{grid-template-columns:1fr 1fr}
+  .hk-val{font-size:24px}
+  .tabs .tab{padding:6px 8px;font-size:11px}
+  .mn-label{font-size:13px;min-width:74px}
+}
+
 </style>
 </head>
 <body>
@@ -534,7 +679,7 @@ function rReport(){
           <label class="fl" style="margin-top:0">一言メモ</label>
           <textarea id="rm" rows="2" placeholder="自由記述">${t('memo')}</textarea>
         </div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:6px">
+        <div class="report-btn-row" style="display:flex;gap:8px;justify-content:flex-end;margin-bottom:6px">
           <button class="btn btn-g" onclick="clrR()">クリア</button>
           <button class="btn btn-p" style="font-size:14px;padding:10px 22px" onclick="svR()">${isE?'更新して保存':'日報を保存'}</button>
         </div>
