@@ -424,13 +424,14 @@ textarea{resize:vertical;line-height:1.6;min-height:68px}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 const MOODS=['😫','😟','😐','😊','😄'];
-const FUNNEL=[
+const FUNNEL_DEFAULT=[
   {k:'approach',label:'アプローチ',c:'rgba(21,96,184,0.75)'},
   {k:'hearing', label:'ヒアリング', c:'rgba(10,122,86,0.75)'},
   {k:'proposal',label:'提案数',     c:'rgba(142,92,14,0.75)'},
   {k:'closing', label:'クロージング',c:'rgba(180,70,28,0.75)'},
   {k:'contract',label:'成約数',     c:'rgba(10,122,86,0.95)'}
 ];
+let FUNNEL=[...FUNNEL_DEFAULT];
 const LOSS=['価格','検討中','家族相談','タイミング','競合他社','その他'];
 const CATS=[
   {k:'work',   l:'仕事',       bg:'#e6f0fc',c:'#0b3878'},
@@ -450,7 +451,8 @@ const NOW=new Date();
 let vy=NOW.getFullYear(), vm=NOW.getMonth()+1, curTab='guide';
 
 function save(){
-  try{localStorage.setItem(KEY,JSON.stringify({goals,reports,patterns,personalGoals,at:new Date().toISOString()}));showSaved();}
+  const funnelLabels=FUNNEL.map(f=>f.label);
+  try{localStorage.setItem(KEY,JSON.stringify({goals,reports,patterns,personalGoals,funnelLabels,at:new Date().toISOString()}));showSaved();}
   catch(e){ul('保存失敗（容量不足の可能性）');}
 }
 function load(){
@@ -459,6 +461,7 @@ function load(){
     if(!r){ul('新規データ — 今日から記録を始めましょう');return;}
     const d=JSON.parse(r);
     if(d.goals)goals=d.goals;if(d.reports)reports=d.reports;if(d.patterns)patterns=d.patterns;if(d.personalGoals)personalGoals=d.personalGoals;
+    if(d.funnelLabels){d.funnelLabels.forEach((lbl,i)=>{if(FUNNEL[i])FUNNEL[i].label=lbl;});}
     if(d.at){const t=new Date(d.at);ul(`最終保存: ${t.getMonth()+1}/${t.getDate()} ${t.getHours()}:${p2(t.getMinutes())}`);}
   }catch(e){ul('データ読み込み失敗');}
 }
@@ -808,11 +811,29 @@ function rGoal(){
   document.getElementById('pg-goal').innerHTML=mnHTML()+`
     <div class="g2">
       <div class="card">
-        <div class="ch">目標設定 <button class="btn btn-p btn-sm" onclick="svGoals()">保存</button></div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.6">指標名は自由に読み替えてOK（例：「アプローチ」→「運動回数」）</div>
+        <div class="ch">目標設定
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-g btn-sm" onclick="resetLabels()">名前をリセット</button>
+            <button class="btn btn-p btn-sm" onclick="svGoals()">保存</button>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.6">指標名を自由に変更できます。保存すると全タブに反映されます。</div>
         <table style="width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed">
-          <thead><tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:6px;font-size:11px;color:var(--text3);font-weight:700">指標</th><th style="padding:6px;font-size:11px;color:var(--text3);font-weight:700;text-align:center">日次</th><th style="padding:6px;font-size:11px;color:var(--text3);font-weight:700;text-align:center">月間</th></tr></thead>
-          <tbody>${FUNNEL.map(f=>`<tr style="border-bottom:1px solid var(--border)"><td style="padding:8px 6px;font-weight:700">${f.label}</td><td style="padding:8px 6px;text-align:center"><input style="width:72px;text-align:center;font-size:15px;font-weight:700" type="number" id="gd-${f.k}" value="${goals.daily[f.k]}" min="0"/></td><td style="padding:8px 6px;text-align:center"><input style="width:72px;text-align:center;font-size:15px;font-weight:700" type="number" id="gm-${f.k}" value="${goals.monthly[f.k]}" min="0"/></td></tr>`).join('')}</tbody>
+          <thead><tr style="border-bottom:1px solid var(--border)">
+            <th style="text-align:left;padding:6px;font-size:11px;color:var(--text3);font-weight:700">指標名（クリックで編集）</th>
+            <th style="padding:6px;font-size:11px;color:var(--text3);font-weight:700;text-align:center">日次</th>
+            <th style="padding:6px;font-size:11px;color:var(--text3);font-weight:700;text-align:center">月間</th>
+          </tr></thead>
+          <tbody>${FUNNEL.map(f=>`<tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:8px 6px">
+              <input id="gl-${f.k}" value="${f.label}"
+                style="font-size:14px;font-weight:700;border:1px solid var(--border2);border-radius:6px;padding:6px 8px;width:100%;background:var(--bg);color:var(--text)"
+                placeholder="指標名を入力"/>
+              <div style="font-size:10px;color:var(--text3);margin-top:2px">初期値: ${FUNNEL_DEFAULT.find(x=>x.k===f.k)?.label||f.label}</div>
+            </td>
+            <td style="padding:8px 6px;text-align:center"><input style="width:72px;text-align:center;font-size:15px;font-weight:700" type="number" id="gd-${f.k}" value="${goals.daily[f.k]}" min="0"/></td>
+            <td style="padding:8px 6px;text-align:center"><input style="width:72px;text-align:center;font-size:15px;font-weight:700" type="number" id="gm-${f.k}" value="${goals.monthly[f.k]}" min="0"/></td>
+          </tr>`).join('')}</tbody>
         </table>
       </div>
       <div class="card">
@@ -827,7 +848,22 @@ function rGoal(){
     charts.gt=new Chart(document.getElementById('gtrend'),{type:'line',data:{labels:ms.map(ym=>`${parseInt(ym.slice(5,7))}月`),datasets:ds},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{min:0,max:100,ticks:{font:{size:10},callback:v=>v+'%'},grid:{color:'rgba(128,128,128,0.07)'}},x:{ticks:{font:{size:11}},grid:{display:false}}}}});
   },0);
 }
-function svGoals(){FUNNEL.forEach(f=>{const d=document.getElementById('gd-'+f.k);const m=document.getElementById('gm-'+f.k);if(d)goals.daily[f.k]=parseInt(d.value)||0;if(m)goals.monthly[f.k]=parseInt(m.value)||0;});save();toast('目標を保存しました');rGoal();}
+function svGoals(){
+  FUNNEL.forEach(f=>{
+    const lbl=document.getElementById('gl-'+f.k);
+    if(lbl&&lbl.value.trim())f.label=lbl.value.trim();
+    const d=document.getElementById('gd-'+f.k);
+    const m=document.getElementById('gm-'+f.k);
+    if(d)goals.daily[f.k]=parseInt(d.value)||0;
+    if(m)goals.monthly[f.k]=parseInt(m.value)||0;
+  });
+  save();toast('目標と指標名を保存しました');rGoal();
+}
+function resetLabels(){
+  if(!confirm('指標名を初期値に戻しますか？'))return;
+  FUNNEL.forEach((f,i)=>{f.label=FUNNEL_DEFAULT[i].label;});
+  save();toast('指標名をリセットしました');rGoal();
+}
 
 /* ── 個人目標 ── */
 function rPGoal(){
