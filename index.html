@@ -90,7 +90,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 .ch{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:4px}
 
 /* ── KPIカード ── */
-.kpi{background:var(--bg2);border-radius:var(--r);padding:12px 14px;border:1px solid var(--border);position:relative}
+.kpi{background:var(--bg2);border-radius:var(--r);padding:12px 12px;border:1px solid var(--border);position:relative}
 .kl{font-size:10px;color:var(--text3);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
 .kv{font-size:28px;font-weight:800;line-height:1;letter-spacing:-.5px}
 .ksub{font-size:11px;color:var(--text3);margin-top:3px}
@@ -131,8 +131,8 @@ textarea{resize:vertical;line-height:1.6;min-height:68px}
 /* ── +/- ── */
 .nc-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border2);background:none;cursor:pointer;font-size:18px;color:var(--text2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .12s}
 .nc-btn:hover{background:var(--bg2)}
-.nc-wrap{display:flex;align-items:center;gap:8px;margin-top:4px}
-.nc-input{flex:1;text-align:center;font-size:22px;font-weight:800;padding:6px}
+.nc-wrap{display:flex;align-items:center;gap:8px;margin-top:6px}
+.nc-input{flex:1;text-align:center;font-size:22px;font-weight:800;padding:8px;min-width:48px;width:100%}
 
 /* ── 気分 ── */
 .mood-strip{display:flex;gap:6px}
@@ -247,6 +247,13 @@ textarea{resize:vertical;line-height:1.6;min-height:68px}
 
   /* グリッド：全部1列 */
   .g2,.g3,.g4,.g5{grid-template-columns:1fr;gap:8px}
+  /* KPI入力：3列維持するが余白を調整 */
+  .card .g3{grid-template-columns:1fr 1fr 1fr!important;gap:6px}
+  .card .g2{grid-template-columns:1fr 1fr!important;gap:6px}
+  /* KPIカード内 入力をコンパクトに */
+  .kpi .nc-btn{width:36px!important;height:36px!important;font-size:18px!important}
+  .kpi .nc-input,.kpi input[type=number]{font-size:20px!important;padding:6px 2px!important;min-width:0!important;text-align:center!important;width:100%!important}
+  .kpi .nc-wrap{gap:4px!important}
   .pdca-grid{grid-template-columns:1fr!important;gap:8px}
 
   /* ヒーローKPI：2列 */
@@ -272,9 +279,16 @@ textarea{resize:vertical;line-height:1.6;min-height:68px}
   .fl{font-size:13px;margin-top:12px;margin-bottom:5px}
 
   /* +/-ボタン：大きく */
-  .nc-btn{width:40px;height:40px;font-size:20px}
-  .nc-input{font-size:24px!important;padding:8px!important}
+  .nc-btn{width:44px;height:44px;font-size:22px;flex-shrink:0}
+  .nc-input{font-size:24px!important;padding:10px!important;min-width:0!important}
   .nc-wrap{gap:8px;margin-top:6px}
+  /* KPIカード内の入力を見やすく */
+  .kpi .nc-wrap input{font-size:28px!important;font-weight:800!important;padding:10px!important;text-align:center;width:100%!important}
+  /* 失注理由：スマホは1列 */
+  #loss-grid>div{grid-template-columns:1fr!important}
+  #loss-grid>div>div{padding:10px 10px}
+  #loss-grid .nc-btn{width:40px!important;height:40px!important;font-size:20px!important}
+  #loss-grid input[type=number]{font-size:22px!important;padding:8px!important}
 
   /* ボタン：タップしやすく */
   .btn{padding:12px 20px;font-size:14px;min-height:44px}
@@ -639,8 +653,22 @@ function rReport(){
         <div class="card">
           <div class="ch">KPI（行動量）${isE?`<span style="font-size:10px;font-weight:400">${r.date}</span>`:''}</div>
           ${!isE?`<div style="margin-bottom:12px"><label class="fl" style="margin-top:0">日付（過去の日付も入力できます）</label><input type="date" id="rd" value="${td()}" max="${td()}"/></div>`:''}
-          <div class="g3" style="margin-bottom:10px">${FUNNEL.slice(0,3).map(f=>`<div class="kpi"><div class="kl">${f.label}</div><div class="hk-sub" style="font-size:10px">日標 ${goals.daily[f.k]}</div><div class="nc-wrap"><button class="nc-btn" onclick="aKpi('${f.k}',-1)">−</button><input class="nc-input" type="number" id="kpi-${f.k}" value="${v(f.k)}" min="0"/><button class="nc-btn" onclick="aKpi('${f.k}',1)">＋</button></div></div>`).join('')}</div>
-          <div class="g2">${FUNNEL.slice(3).map(f=>`<div class="kpi"><div class="kl">${f.label}</div><div class="hk-sub" style="font-size:10px">日標 ${goals.daily[f.k]}</div><div class="nc-wrap"><button class="nc-btn" onclick="aKpi('${f.k}',-1)">−</button><input class="nc-input" type="number" id="kpi-${f.k}" value="${v(f.k)}" min="0"/><button class="nc-btn" onclick="aKpi('${f.k}',1)">＋</button></div></div>`).join('')}</div>
+          <div style="display:flex;flex-direction:column;gap:10px">${FUNNEL.map(f=>`
+            <div style="background:var(--bg2);border-radius:var(--r);padding:12px 14px;border:1px solid var(--border)">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <span style="font-size:13px;font-weight:700;color:var(--text2)">${f.label}</span>
+                <span style="font-size:11px;color:var(--text3)">日標 ${goals.daily[f.k]}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <button class="nc-btn" onclick="aKpi('${f.k}',-1)" style="flex-shrink:0">−</button>
+                <input type="number" id="kpi-${f.k}" value="${v(f.k)}" min="0"
+                  style="flex:1;text-align:center;font-size:32px;font-weight:800;padding:10px;
+                  border:1px solid var(--border2);border-radius:8px;
+                  background:var(--bg);color:var(--text);font-family:var(--font);min-width:0"/>
+                <button class="nc-btn" onclick="aKpi('${f.k}',1)" style="flex-shrink:0">＋</button>
+              </div>
+            </div>
+          `).join('')}</div>
         </div>
         <div class="card">
           <div class="ch">PDCA</div>
@@ -662,9 +690,7 @@ function rReport(){
         </div>
         <div class="card">
           <div class="ch">障害・失注の理由（件数）</div>
-          <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px">
-            ${LOSS.map(lr=>`<div style="display:flex;align-items:center;gap:6px"><span style="font-size:11px;color:var(--text2);width:64px;flex-shrink:0;font-weight:600">${lr}</span><div class="nc-wrap" style="flex:1"><button class="nc-btn" onclick="aL('${lr}',-1)">−</button><input type="number" id="l-${lid(lr)}" value="${r&&r.loss?r.loss[lr]||0:0}" min="0" style="width:44px;text-align:center;font-size:16px;font-weight:800;padding:5px"/><button class="nc-btn" onclick="aL('${lr}',1)">＋</button></div></div>`).join('')}
-          </div>
+          <div id="loss-grid"></div>
         </div>
         <div class="card">
           <div class="ch">思考ログ・明日の重点行動</div>
@@ -686,6 +712,23 @@ function rReport(){
         ${r&&!isE?`<div style="font-size:11px;color:var(--green-text);text-align:right;font-weight:600">本日分保存済（上書き可）</div>`:''}
       </div>
     </div>`;
+}
+function renderLossGrid(r){
+  const el=document.getElementById('loss-grid');
+  if(!el)return;
+  el.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${LOSS.map(lr=>`
+    <div style="background:var(--bg2);border-radius:var(--r);padding:10px 12px;border:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px">${lr}</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="nc-btn" onclick="aL('${lr}',-1)" style="flex-shrink:0">−</button>
+        <input type="number" id="l-${lid(lr)}"
+          value="${r&&r.loss?r.loss[lr]||0:0}"
+          min="0"
+          style="flex:1;text-align:center;font-size:24px;font-weight:800;padding:8px;border:1px solid var(--border2);border-radius:8px;background:var(--bg);color:var(--text);font-family:var(--font);min-width:0"/>
+        <button class="nc-btn" onclick="aL('${lr}',1)" style="flex-shrink:0">＋</button>
+      </div>
+    </div>
+  `).join('')}</div>`;
 }
 function aKpi(k,d){const e=document.getElementById('kpi-'+k);if(e)e.value=Math.max(0,(parseInt(e.value)||0)+d);}
 function aL(lr,d){const e=document.getElementById('l-'+lid(lr));if(e)e.value=Math.max(0,(parseInt(e.value)||0)+d);}
